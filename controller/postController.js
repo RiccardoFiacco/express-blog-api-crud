@@ -4,15 +4,6 @@ function index(req, res){
     console.log("ritorno dei post");
     let postList = posts;
     let id =parseInt(req.query.limit);
-    
-    if(postId === -1){
-        console.log("non presente")
-        res.status(404)
-        return res.json({
-            error:"not found",
-            message:"non presente"
-        })
-    }
 
     //filtro con le query string
     if(req.query.tags){ //se esiste il tag
@@ -34,7 +25,7 @@ function show(req, res){
     const id = req.params.id
     console.log(id)
     let post;
-    
+
     const postId = posts.findIndex((el)=> el.id === id || el.slug === id)
     if(postId === -1){
         console.log("non presente")
@@ -72,8 +63,8 @@ function modify(req, res){
     res.send("modifica parte dell elemento")
 }
 function destroy(req, res){
-    let id = parseInt(req.params.id)
-    const postId = posts.findIndex((el)=> el.id === id)
+    let id = req.params.id
+    const postId = posts.findIndex((el)=> el.id === id || el.slug === id)
 
     if(postId === -1){
         console.log("non presente")
