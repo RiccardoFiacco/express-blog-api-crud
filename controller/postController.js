@@ -2,8 +2,22 @@ const posts = require('../data/posts.js'); //importiamo i post
 
 function index(req, res){
     console.log("lista dei post");
-    res.json(posts)
+    let postList = posts;
+    let id =parseInt(req.query.limit);
+    console.log(id)
+    //filtro con le query string
+    if(req.query.tags){ //se esiste il tag
+        postList = posts.filter((element)=>{ //per ogni elemento
+            return element.tags.includes(req.query.tags); //ritorniamo solo quelli che hanno il valore inserito
+        })
+    }
+    //limite di post
+    if(id && !isNaN(id) && id>=0){ //se id è un numero e maggiore o uguale a 0
+        postList = posts.slice(0, id)
+    }
+    res.json(postList)
 }
+
 function show(req, res){
     console.log("ritorno del post rischiesto");
     const id = parseInt(req.params.id)
@@ -16,7 +30,7 @@ function store(req, res){
         slug: "cavolo-cappuccio",
         content: `il cavolo cappuccio è una verdura di origine lombarda e precisamente della Brianza, la zona compresa tra la provincia a nord di Milano e il lago di Lecco-Como!`,
         image: "cavolo-cappuccio.jpeg",
-        tags: ["verdure", "verdure al cioccolato", "verdureee", "Ricette vegetariane", "Ricette al forno"],
+        tags: ["verdure", "verdure al cioccolato", "verdureee", "ricette vegetariane", "ricette al forno"],
     }
     posts.push(obj)
     res.send("creato elemento")
