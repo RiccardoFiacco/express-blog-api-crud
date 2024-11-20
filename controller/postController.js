@@ -22,11 +22,11 @@ function index(req, res){
 
 function show(req, res){
     console.log("ritorno del post rischiesto");
-    const id = req.params.id
+    const id =  req.params.id
     console.log(id)
     let post;
 
-    const postId = posts.findIndex((el)=> el.id === id || el.slug === id)
+    const postId = posts.findIndex((el)=> el.id === parseInt(id) || el.slug === id)
     if(postId === -1){
         console.log("non presente")
         res.status(404)
@@ -36,8 +36,8 @@ function show(req, res){
         })
     }
 
-    if(id && !isNaN(parseInt(id)) && id>=0){ //se id è un numero e maggiore o uguale a 0
-       post = posts.find((el)=>el.id === id)
+    if(parseInt(id) && !isNaN(parseInt(id)) && parseInt(id)>=0){ //se id è un numero e maggiore o uguale a 0
+       post = posts.find((el)=>el.id === parseInt(id))
     }else{
         post = posts.find((el)=>el.slug=== id) 
     }
@@ -64,7 +64,7 @@ function modify(req, res){
 }
 function destroy(req, res){
     let id = req.params.id
-    const postId = posts.findIndex((el)=> el.id === id || el.slug === id)
+    const postId = posts.findIndex((el)=> el.id === parseInt(id) || el.slug === id)
 
     if(postId === -1){
         console.log("non presente")
