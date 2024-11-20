@@ -1,20 +1,31 @@
 const posts = require('../data/posts.js'); //importiamo i post
 
 function index(req, res){
-    console.log("lista dei post");
+    console.log("ritorno dei post");
     let postList = posts;
     let id =parseInt(req.query.limit);
-    console.log(id)
+    
+    if(postId === -1){
+        console.log("non presente")
+        res.status(404)
+        return res.json({
+            error:"not found",
+            message:"non presente"
+        })
+    }
+
     //filtro con le query string
     if(req.query.tags){ //se esiste il tag
         postList = posts.filter((element)=>{ //per ogni elemento
             return element.tags.includes(req.query.tags); //ritorniamo solo quelli che hanno il valore inserito
         })
     }
+
     //limite di post
     if(id && !isNaN(id) && id>=0){ //se id è un numero e maggiore o uguale a 0
         postList = posts.slice(0, id)
     }
+
     res.json(postList)
 }
 
