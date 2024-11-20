@@ -48,6 +48,18 @@ function modify(req, res){
     res.send("modifica parte dell elemento")
 }
 function destroy(req, res){
+    let id = parseInt(req.params.id)
+    const postId = posts.findIndex((el)=> el.id === id)
+
+    if(postId === -1){
+        console.log("non presente")
+        res.status(404)
+        return res.json({
+            error:"not found",
+            message:"non presente"
+        })
+    }
+    posts.splice(postId, 1)
     res.send("eliminiazione dell elemento")
 }
 
