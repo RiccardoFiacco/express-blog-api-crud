@@ -31,11 +31,24 @@ function index(req, res){
 
 function show(req, res){
     console.log("ritorno del post rischiesto");
-    const id = parseInt(req.params.id)
-
+    const id = req.params.id
+    console.log(id)
     let post;
-    if(id && !isNaN(id) && id>=0){ //se id è un numero e maggiore o uguale a 0
+    
+    const postId = posts.findIndex((el)=> el.id === id || el.slug === id)
+    if(postId === -1){
+        console.log("non presente")
+        res.status(404)
+        return res.json({
+            error:"not found",
+            message:"non presente"
+        })
+    }
+
+    if(id && !isNaN(parseInt(id)) && id>=0){ //se id è un numero e maggiore o uguale a 0
        post = posts.find((el)=>el.id === id)
+    }else{
+        post = posts.find((el)=>el.slug=== id) 
     }
 
     res.json(post)
