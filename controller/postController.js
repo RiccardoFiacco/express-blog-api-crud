@@ -21,9 +21,15 @@ function index(req, res){
 function show(req, res){
     console.log("ritorno del post rischiesto");
     const id = parseInt(req.params.id)
-    const post = posts[id]
+
+    let post;
+    if(id && !isNaN(id) && id>=0){ //se id è un numero e maggiore o uguale a 0
+       post = posts.find((el)=>el.id === id)
+    }
+
     res.json(post)
 }
+
 function store(req, res){
     let obj = {
         title: "cavolo cappuccio",
