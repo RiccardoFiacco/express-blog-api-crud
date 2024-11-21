@@ -107,6 +107,16 @@ function modify(req, res){
         res.status(404)
         return res.json(result)
     }
+    console.log(req.body)
+    const {title, slug, content, image, tags} = req.body;
+    const post = posts.find((el)=>el.id === parseInt(id));
+    
+    if(title){ post.title = title } 
+    if(slug){ post.slug = slug }
+    if(content){ post.content = content } 
+    if(image){ post.image = image }
+    if(tags){ post.tags = tags }
+
     res.send("modifica parte dell elemento")
 }
 
