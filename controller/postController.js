@@ -43,17 +43,24 @@ function show(req, res){
 }
 
 function store(req, res){
-    if(req.body.tags.length > 1){
-        let obj = {
-            id: lastIndex+1,
-            title: req.body.title,
-            slug: req.body.slug,
-            content: req.body.content,
-            image: req.body.image,
-            tags: req.body.tags
-        }
-        posts.push(obj)
+    const {title, slug, content, image, tags} = req.body;
+    
+    if(!title || !slug || !content || !image || !tags){
+        res.status(403)
+        return res.json({
+            error:"invalid req",
+            message:"dati non completi"
+        })
     }
+    let obj = {
+        id: lastIndex+1,
+        title: title,
+        slug: slug,
+        content: content,
+        image: image,
+        tags: tags
+    }
+    posts.push(obj)
     res.status(201)
     res.send("creato elemento")
 }
