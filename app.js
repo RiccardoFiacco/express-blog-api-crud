@@ -4,7 +4,7 @@ const port = 3000; //attribuiamo una porta
 const postRouter = require('./router/posts.js')
 
 app.use(express.static('public'));//rendiamo il contenuto della cartella public publico
-
+app.use(express.json())
 app.listen(port, ()=>{ //mettiamo il server in ascolto alla porta numero 3000
     console.log(`in ascolto sulla porta ${port}`)
 })
