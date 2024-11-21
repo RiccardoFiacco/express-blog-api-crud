@@ -1,4 +1,6 @@
 const posts = require('../data/posts.js'); //importiamo i post
+const exists = require('../utils/utils.js');
+let lastIndex= posts.at(-1).id;
 
 function index(req, res){
     console.log("ritorno dei post");
@@ -23,17 +25,12 @@ function index(req, res){
 function show(req, res){
     console.log("ritorno del post rischiesto");
     const id =  req.params.id
-    console.log(id)
     let post;
 
-    const postId = posts.findIndex((el)=> el.id === parseInt(id) || el.slug === id)
-    if(postId === -1){
-        console.log("non presente")
+    const result = exists(id, posts)
+    if(typeof result === 'object'){
         res.status(404)
-        return res.json({
-            error:"not found",
-            message:"non presente"
-        })
+        return res.json(result)
     }
 
     if(parseInt(id) && !isNaN(parseInt(id)) && parseInt(id)>=0){ //se id è un numero e maggiore o uguale a 0
@@ -46,35 +43,36 @@ function show(req, res){
 }
 
 function store(req, res){
-    let obj = {
-        title: "cavolo cappuccio",
-        slug: "cavolo-cappuccio",
-        content: `il cavolo cappuccio è una verdura di origine lombarda e precisamente della Brianza, la zona compresa tra la provincia a nord di Milano e il lago di Lecco-Como!`,
-        image: "cavolo-cappuccio.jpeg",
-        tags: ["verdure", "verdure al cioccolato", "verdureee", "ricette vegetariane", "ricette al forno"],
+    if(req.body.tags.length > 1){
+        let obj = {
+            id: lastIndex+1,
+            title: req.body.title,
+            slug: req.body.slug,
+            content: req.body.content,
+            image: req.body.image,
+            tags: req.body.tags
+        }
+        posts.push(obj)
     }
-    posts.push(obj)
+    res.status(201)
     res.send("creato elemento")
 }
+
 function update(req, res){
     res.send("modifica tutto elemento")
 }
 function modify(req, res){
     res.send("modifica parte dell elemento")
 }
+
 function destroy(req, res){
     let id = req.params.id
-    const postId = posts.findIndex((el)=> el.id === parseInt(id) || el.slug === id)
-
-    if(postId === -1){
-        console.log("non presente")
+    const result = exists(id, posts)
+    if(typeof result === 'object'){
         res.status(404)
-        return res.json({
-            error:"not found",
-            message:"non presente"
-        })
+        return res.json(result)
     }
-    posts.splice(postId, 1)
+    posts.splice(result, 1)
     res.send("eliminiazione dell elemento")
 }
 
