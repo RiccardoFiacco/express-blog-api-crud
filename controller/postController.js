@@ -44,7 +44,7 @@ function show(req, res){
 
 function store(req, res){
     const {title, slug, content, image, tags} = req.body;
-    
+
     if(!title || !slug || !content || !image || !tags){
         res.status(403)
         return res.json({
@@ -66,8 +66,40 @@ function store(req, res){
 }
 
 function update(req, res){
-    res.send("modifica tutto elemento")
+    const id =  req.params.id
+    const result = exists(id, posts)
+    if(typeof result === 'object'){
+        res.status(404)
+        return res.json(result)
+    }
+
+    const {title, slug, content, image, tags} = req.body;
+    let error = [];
+    if(!title){ error.push("name non presente") } 
+    if(!slug){ error.push("slug non presente") }
+    if(!content){ error.push(" content non presente") } 
+    if(!image){ error.push("image non presente") }
+    if(!tags){ error.push("tags non presente") }
+
+    if(error.length > 0){
+        res.status(403)
+        return res.json({
+            error:"invalid req",
+            message: error
+        })
+    }
+    const post = posts.find((el)=>el.id === parseInt(id));
+
+    post.title = title
+    post.slug = slug
+    post.content = content
+    post.image = image
+    post.tags = tags
+
+    res.status(201)
+    res.send("modificato tutto l'elemento")
 }
+
 function modify(req, res){
     res.send("modifica parte dell elemento")
 }
