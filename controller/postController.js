@@ -107,7 +107,12 @@ function modify(req, res){
         res.status(404)
         return res.json(result)
     }
-    console.log(req.body)
+
+    const keysArr = Object.keys(req.body);
+    if(keysArr.length == 0){
+        return res.json({error:"insert something"})
+    }
+
     const {title, slug, content, image, tags} = req.body;
     const post = posts.find((el)=>el.id === parseInt(id));
     
