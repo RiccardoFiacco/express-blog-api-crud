@@ -101,6 +101,12 @@ function update(req, res){
 }
 
 function modify(req, res){
+    const id =  req.params.id
+    const result = exists(id, posts)
+    if(typeof result === 'object'){
+        res.status(404)
+        return res.json(result)
+    }
     res.send("modifica parte dell elemento")
 }
 
