@@ -12,4 +12,17 @@ function exists(id, posts){
     return postId;
 }
 
-module.exports = exists;
+
+function checkId(req, res, next) {
+    const id = req.params.id;
+    if (isNaN(id)) {
+        return res.json({
+            error: "id non è un numero"
+        })
+    } else {
+        next();
+    }
+}
+
+
+module.exports = {exists, checkId};

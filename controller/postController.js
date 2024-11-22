@@ -1,8 +1,8 @@
 const posts = require('../data/posts.js'); //importiamo i post
-const exists = require('../middlewere/utils.js');
+const {exists} = require('../middlewere/utils.js');
 let lastIndex= posts.at(-1).id;
 
-function index(req, res){
+function index(req, res, next){
     console.log("ritorno dei post");
     let postList = posts;
     let id =parseInt(req.query.limit);
@@ -22,11 +22,12 @@ function index(req, res){
     res.json(postList)
 }
 
-function show(req, res){
+function show(req, res, next){
     console.log("ritorno del post rischiesto");
+    
     const id =  req.params.id
     let post;
-
+    //da far diventare un middle
     const result = exists(id, posts)
     if(typeof result === 'object'){
         res.status(404)
@@ -40,9 +41,11 @@ function show(req, res){
     }
 
     res.json(post)
+    
 }
 
 function store(req, res){
+    //da far diventare un middle
     const {title, slug, content, image, tags} = req.body;
 
     if(!title || !slug || !content || !image || !tags){
@@ -52,6 +55,7 @@ function store(req, res){
             message:"dati non completi"
         })
     }
+
     let obj = {
         id: lastIndex+1,
         title: title,
@@ -66,6 +70,8 @@ function store(req, res){
 }
 
 function update(req, res){
+
+    //da far diventare un middle
     const id =  req.params.id
     const result = exists(id, posts)
     if(typeof result === 'object'){
@@ -80,7 +86,6 @@ function update(req, res){
     if(!content){ error.push(" content non presente") } 
     if(!image){ error.push("image non presente") }
     if(!tags){ error.push("tags non presente") }
-
     if(error.length > 0){
         res.status(403)
         return res.json({
@@ -101,18 +106,19 @@ function update(req, res){
 }
 
 function modify(req, res){
+    //da far diventare un middle
     const id =  req.params.id
     const result = exists(id, posts) //richiamiamo il metodo per vedere se l'id esiste
     if(typeof result === 'object'){// se ci ritorna un oggetto (cioè l'errore)
         res.status(404) //diamo stato 404
         return res.json(result)// e ritorno l'oggetto che mi restituisce la funzione
     }
-
+    //da far diventare un middle
     const keysArr = Object.keys(req.body); //se invece esiste l'id, prendo le chiavi del json che mi è stato mandato
     if(keysArr.length == 0){ //se sono 0
         return res.json({error:"insert something"}) //vuol dire che non mi hanno mandato nulla
     }
-
+    
     const {title, slug, content, image, tags} = req.body; //altrimenti prendo i dati 
     const post = posts.find((el)=>el.id === parseInt(id)); //cerco il post con l'id chge mi è stato mandato
     // se esiste il valore faccio la modifica 
@@ -126,7 +132,9 @@ function modify(req, res){
 }
 
 function destroy(req, res){
+
     let id = req.params.id
+    //da far diventare un middle
     const result = exists(id, posts)
     if(typeof result === 'object'){
         res.status(404)

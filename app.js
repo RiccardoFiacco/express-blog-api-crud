@@ -11,11 +11,6 @@ app.listen(port, ()=>{ //mettiamo il server in ascolto alla porta numero 3000
     console.log(`in ascolto sulla porta ${port}`)
 })
 
-app.use("/post/:id", (req, res, next) => {
-    console.log("'Request Type:', req.method")
-    next()
-})
-
 app.use('/posts', postRouter)
 app.use(errorH)
 app.use(notFound)
