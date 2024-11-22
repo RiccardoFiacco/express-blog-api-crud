@@ -1,7 +1,7 @@
-function notFoundH (err, req, res, next){
+function notFoundH (req, res, next){
     res.status(404)
     return res.json({
-        error: err.message,
+        error: "not found",
         message: "page not found"
     })
 }
