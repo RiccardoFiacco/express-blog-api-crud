@@ -1,5 +1,5 @@
 const posts = require('../data/posts.js'); //importiamo i post
-const exists = require('../utils/utils.js');
+const exists = require('../middlewere/utils.js');
 let lastIndex= posts.at(-1).id;
 
 function index(req, res){
