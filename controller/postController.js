@@ -1,5 +1,4 @@
 const posts = require('../data/posts.js'); //importiamo i post
-const {exists} = require('../middlewere/utils.js');
 let lastIndex= posts.at(-1).id;
 
 function index(req, res, next){
@@ -20,42 +19,25 @@ function index(req, res, next){
     }
 
     res.json(postList)
+    next()
 }
 
 function show(req, res, next){
     console.log("ritorno del post rischiesto");
-    
     const id =  req.params.id
     let post;
-    //da far diventare un middle
-    const result = exists(id, posts)
-    if(typeof result === 'object'){
-        res.status(404)
-        return res.json(result)
-    }
-
     if(parseInt(id) && !isNaN(parseInt(id)) && parseInt(id)>=0){ //se id è un numero e maggiore o uguale a 0
-       post = posts.find((el)=>el.id === parseInt(id))
+        post = posts.find((el)=>el.id === parseInt(id))
     }else{
         post = posts.find((el)=>el.slug=== id) 
     }
 
     res.json(post)
-    
+    next()
 }
 
-function store(req, res){
-    //da far diventare un middle
+function store(req, res, next){
     const {title, slug, content, image, tags} = req.body;
-
-    if(!title || !slug || !content || !image || !tags){
-        res.status(403)
-        return res.json({
-            error:"invalid req",
-            message:"dati non completi"
-        })
-    }
-
     let obj = {
         id: lastIndex+1,
         title: title,
@@ -67,32 +49,12 @@ function store(req, res){
     posts.push(obj)
     res.status(201)
     res.send("creato elemento")
+    next()
 }
 
-function update(req, res){
-
-    //da far diventare un middle
+function update(req, res, next){
     const id =  req.params.id
-    const result = exists(id, posts)
-    if(typeof result === 'object'){
-        res.status(404)
-        return res.json(result)
-    }
-
     const {title, slug, content, image, tags} = req.body;
-    let error = [];
-    if(!title){ error.push("name non presente") } 
-    if(!slug){ error.push("slug non presente") }
-    if(!content){ error.push(" content non presente") } 
-    if(!image){ error.push("image non presente") }
-    if(!tags){ error.push("tags non presente") }
-    if(error.length > 0){
-        res.status(403)
-        return res.json({
-            error:"invalid req",
-            message: error
-        })
-    }
     const post = posts.find((el)=>el.id === parseInt(id));
 
     post.title = title
@@ -103,22 +65,12 @@ function update(req, res){
 
     res.status(201)
     res.send("modificato tutto l'elemento")
+    next()
 }
 
-function modify(req, res){
-    //da far diventare un middle
+function modify(req, res, next){
     const id =  req.params.id
-    const result = exists(id, posts) //richiamiamo il metodo per vedere se l'id esiste
-    if(typeof result === 'object'){// se ci ritorna un oggetto (cioè l'errore)
-        res.status(404) //diamo stato 404
-        return res.json(result)// e ritorno l'oggetto che mi restituisce la funzione
-    }
-    //da far diventare un middle
-    const keysArr = Object.keys(req.body); //se invece esiste l'id, prendo le chiavi del json che mi è stato mandato
-    if(keysArr.length == 0){ //se sono 0
-        return res.json({error:"insert something"}) //vuol dire che non mi hanno mandato nulla
-    }
-    
+
     const {title, slug, content, image, tags} = req.body; //altrimenti prendo i dati 
     const post = posts.find((el)=>el.id === parseInt(id)); //cerco il post con l'id chge mi è stato mandato
     // se esiste il valore faccio la modifica 
@@ -129,19 +81,14 @@ function modify(req, res){
     if(tags){ post.tags = tags }
 
     res.send("modifica parte dell elemento")
+    next()
 }
 
-function destroy(req, res){
-
+function destroy(req, res, next){ //problema
     let id = req.params.id
-    //da far diventare un middle
-    const result = exists(id, posts)
-    if(typeof result === 'object'){
-        res.status(404)
-        return res.json(result)
-    }
-    posts.splice(result, 1)
+    posts.splice(id, 1)
     res.send("eliminiazione dell elemento")
+    next()
 }
 
 module.exports={index, show, store, update, modify, destroy}
