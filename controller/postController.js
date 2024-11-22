@@ -102,20 +102,20 @@ function update(req, res){
 
 function modify(req, res){
     const id =  req.params.id
-    const result = exists(id, posts)
-    if(typeof result === 'object'){
-        res.status(404)
-        return res.json(result)
+    const result = exists(id, posts) //richiamiamo il metodo per vedere se l'id esiste
+    if(typeof result === 'object'){// se ci ritorna un oggetto (cioè l'errore)
+        res.status(404) //diamo stato 404
+        return res.json(result)// e ritorno l'oggetto che mi restituisce la funzione
     }
 
-    const keysArr = Object.keys(req.body);
-    if(keysArr.length == 0){
-        return res.json({error:"insert something"})
+    const keysArr = Object.keys(req.body); //se invece esiste l'id, prendo le chiavi del json che mi è stato mandato
+    if(keysArr.length == 0){ //se sono 0
+        return res.json({error:"insert something"}) //vuol dire che non mi hanno mandato nulla
     }
 
-    const {title, slug, content, image, tags} = req.body;
-    const post = posts.find((el)=>el.id === parseInt(id));
-    
+    const {title, slug, content, image, tags} = req.body; //altrimenti prendo i dati 
+    const post = posts.find((el)=>el.id === parseInt(id)); //cerco il post con l'id chge mi è stato mandato
+    // se esiste il valore faccio la modifica 
     if(title){ post.title = title } 
     if(slug){ post.slug = slug }
     if(content){ post.content = content } 
