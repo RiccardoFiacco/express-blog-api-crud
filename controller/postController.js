@@ -37,6 +37,7 @@ function show(req, res, next){
 }
 
 function store(req, res, next){
+    
     const {title, slug, content, image, tags} = req.body;
     let obj = {
         id: lastIndex+1,
@@ -46,9 +47,10 @@ function store(req, res, next){
         image: image,
         tags: tags
     }
+     lastIndex += 1;
     posts.push(obj)
     res.status(201)
-    res.send("creato elemento")
+    res.send(obj)
     next()
 }
 
@@ -85,8 +87,9 @@ function modify(req, res, next){
 }
 
 function destroy(req, res, next){ //problema
-    let id = req.params.id
-    posts.splice(id, 1)
+    let id = req.params.id;
+    const idToRemove = posts.findIndex((el)=> el.id == id);
+    posts.splice(idToRemove, 1);
     res.send("eliminiazione dell elemento")
     next()
 }
