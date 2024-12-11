@@ -26,14 +26,27 @@ function show(req, res, next){
     console.log("ritorno del post rischiesto");
     const id =  req.params.id
     let post;
+    let successive;
+    let previous;
     if(parseInt(id) && !isNaN(parseInt(id)) && parseInt(id)>=0){ //se id è un numero e maggiore o uguale a 0
         post = posts.find((el)=>el.id === parseInt(id))
+        
     }else{
         post = posts.find((el)=>el.slug=== id) 
     }
 
-    res.json(post)
-    //res.data = post;
+    let currentIndex = posts.findIndex((post)=>post.id == parseInt(id));
+    console.log("index del post numero "+post.id+" :"+currentIndex)
+
+    if(posts[currentIndex+1]){
+        successive = currentIndex+1;
+    }
+    if(posts[currentIndex-1]){
+        previous = currentIndex-1;
+    }
+    post.successive = successive;
+    post.previous = previous;
+    res.json(post) 
     next()
 }
 
@@ -97,8 +110,8 @@ function destroy(req, res, next){ //problema
 
 function getTags(req, res, next){ //problema
     const arrFinal=[];
-    posts.map((post)=>{
-        post.tags.map((tag)=>{
+    posts.forEach((post)=>{
+        post.tags.forEach((tag)=>{
             if(!arrFinal.includes(tag)){
                 arrFinal.push(tag)
             }
