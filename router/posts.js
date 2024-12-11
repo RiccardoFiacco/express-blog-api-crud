@@ -7,9 +7,15 @@ const {existsId, checkInput, checkInputUpdate, checkVoid} = require("../middlewe
 router.get('/', postController.index, () => {
     console.log('Fine index');
 });
+
+//tags
+router.get('/tags', postController.getTags, ()=>{console.log("fine get tags")})
+
 //show
-router.get('/:id', existsId, postController.show, () => {
+router.get('/:id', existsId, postController.show, (req, res, next) => {
+    //console.log(res.data);
     console.log('Fine show');
+    //res.json(res.data);
 })
 //store
 router.post('/', checkInput,  postController.store,() => {
@@ -27,5 +33,7 @@ router.patch('/:id', existsId, checkVoid, postController.modify,() => {
 router.delete('/:id', existsId, postController.destroy,() => {
     console.log('Fine destroy');
 })
+
+
 
 module.exports = router;

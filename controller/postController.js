@@ -33,6 +33,7 @@ function show(req, res, next){
     }
 
     res.json(post)
+    //res.data = post;
     next()
 }
 
@@ -94,4 +95,18 @@ function destroy(req, res, next){ //problema
     next()
 }
 
-module.exports={index, show, store, update, modify, destroy}
+function getTags(req, res, next){ //problema
+    const arrFinal=[];
+    posts.map((post)=>{
+        post.tags.map((tag)=>{
+            if(!arrFinal.includes(tag)){
+                arrFinal.push(tag)
+            }
+        })
+    })
+    console.log(arrFinal)
+    res.json(arrFinal)
+    next()
+}
+
+module.exports={index, show, store, update, modify, destroy, getTags}
