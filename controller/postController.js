@@ -39,10 +39,10 @@ function show(req, res, next){
     console.log("index del post numero "+post.id+" :"+currentIndex)
 
     if(posts[currentIndex+1]){
-        successive = currentIndex+1;
+        successive = posts[currentIndex+1].id;
     }
     if(posts[currentIndex-1]){
-        previous = currentIndex-1;
+        previous = posts[currentIndex-1].id;
     }
     post.successive = successive;
     post.previous = previous;
